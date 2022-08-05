@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit task</title>
+</head>
+<body>
+<form th:method="PATCH" th:action="@{/tasks/{id}(id=${task.getId()})}" th:object="${task}">
+    <label for="name">Enter name</label>
+    <input type="text" th:field="*{name}" id="name">
+    <div style="color: red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name error</div>
+    <br/>
+    <label for="dateOfEnd">Enter date of end</label>
+    <input type="text" th:field="*{dateOfEnd}" id="dateOfEnd">
+    <div style="color: red" th:if="${#fields.hasErrors('dateOfEnd')}" th:errors="*{dateOfEnd}">Date error</div>
+    <br/>
+    <label for="description">Enter description</label>
+    <input type="text" th:field="*{description}" id="description">
+    <br/>
+    <input type="submit" value="Update"/>
+</form>
+</body>
+</html>
