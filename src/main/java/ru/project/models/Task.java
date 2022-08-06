@@ -1,5 +1,7 @@
 package ru.project.models;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.validation.constraints.NotEmpty;
 import java.util.Date;
 
@@ -8,11 +10,11 @@ public class Task {
     @NotEmpty(message = "the field cannot be empty")
     private String name;
     private String description;
-    private String dateOfStart;
-    @NotEmpty(message = "the field cannot be empty")
-    private String dateOfEnd;
+    private Date dateOfStart;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date dateOfEnd;
 
-    public Task(int id, String name, String description, String dateOfStart, String dateOfEnd){
+    public Task(int id, String name, String description, Date dateOfStart, Date dateOfEnd){
         this.id = id;
         this.name = name;
         this.description = description;
@@ -48,19 +50,19 @@ public class Task {
         this.description = description;
     }
 
-    public String getDateOfStart() {
+    public Date getDateOfStart() {
         return dateOfStart;
     }
 
-    public void setDateOfStart(String dateOfStart) {
+    public void setDateOfStart(Date dateOfStart) {
         this.dateOfStart = dateOfStart;
     }
 
-    public String getDateOfEnd() {
+    public Date getDateOfEnd() {
         return dateOfEnd;
     }
 
-    public void setDateOfEnd(String dateOfEnd) {
+    public void setDateOfEnd(Date dateOfEnd) {
         this.dateOfEnd = dateOfEnd;
     }
 }

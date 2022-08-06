@@ -12,8 +12,7 @@
         <div style="color: red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name error</div>
         <br/>
         <label for="dateOfEnd">Enter date of end</label>
-        <input type="text" th:field="*{dateOfEnd}" id="dateOfEnd"/>
-        <div style="color: red" th:if="${#fields.hasErrors('dateOfEnd')}" th:errors="*{dateOfEnd}">Date error</div>
+        <input type="datetime-local" th:field="*{dateOfEnd}" id="dateOfEnd"/>
         <br/>
         <label for="description">Enter description</label>
         <input type="text" th:field="*{description}" id="description"/>
