@@ -1,47 +1,58 @@
 package ru.project.dao;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import ru.project.models.Task;
 
-import java.sql.*;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Component
 public class TaskDAO {
-    private final JdbcTemplate jdbcTemplate;
 
-    @Autowired
-    public TaskDAO(JdbcTemplate jdbcTemplate){
-        this.jdbcTemplate = jdbcTemplate;
-    }
+    private final SessionFactory sessionFactory;
 
     Date date = new Date();
 
+    @Autowired
+        public TaskDAO(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
+
+    @Transactional(readOnly = true)
     public List<Task> index(){
-        return jdbcTemplate.query("SELECT * FROM Task", new BeanPropertyRowMapper<>(Task.class));
+        Session session = sessionFactory.getCurrentSession();
+        List<Task> tasks = session.createQuery("SELECT t FROM Task t", Task.class).getResultList();
+        return tasks;
     }
 
+    @Transactional(readOnly = true)
     public Task show(int id){
-        return jdbcTemplate.query("SELECT * FROM Task WHERE id = ?", new Object[]{id}, new BeanPropertyRowMapper<>(Task.class))
-                .stream().findAny().orElse(null);
+        Session session = sessionFactory.getCurrentSession();
+        return session.get(Task.class,id);
     }
 
+    @Transactional
     public void save(Task task){
-        jdbcTemplate.update("INSERT INTO Task VALUES (1,?,?,?,?)", task.getName(),task.getDescription(), new java.sql.Date(date.getTime()),new java.sql.Date(task.getDateOfEnd().getTime()));
+        Session session = sessionFactory.getCurrentSession();
+        session.save(task);
     }
 
+    @Transactional
     public void update(int id, Task updatedTask){
-        jdbcTemplate.update("UPDATE Task SET name=?, description=?, dateOfEnd=? WHERE id = ?",updatedTask.getName(),updatedTask.getDescription(),new java.sql.Date(updatedTask.getDateOfEnd().getTime()), id);
+        Session session = sessionFactory.getCurrentSession();
+        Task tasktobeupdated = session.get(Task.class, id);
+        tasktobeupdated.setName(updatedTask.getName());
+        tasktobeupdated.setDescription(updatedTask.getDescription());
+        tasktobeupdated.setDateOfEnd(updatedTask.getDateOfEnd());
+    }
+    @Transactional
+    public void delete(int id){
+        Session session = sessionFactory.getCurrentSession();
+        session.remove(session.get(Task.class, id));
     }
 
-    public void delete(int id){
-        jdbcTemplate.update("DELETE FROM Task WHERE id=?",id);
-    }
 }

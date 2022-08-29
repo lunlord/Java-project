@@ -2,20 +2,29 @@ package ru.project.models;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import java.util.Date;
 
+@Entity
+@Table(name = "task")
 public class Task {
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @NotEmpty(message = "the field cannot be empty")
+    @Column(name = "name")
     private String name;
+    @Column(name = "description")
     private String description;
+    @Column(name = "dateOfStart")
     private Date dateOfStart;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Column(name = "dateOfEnd")
     private Date dateOfEnd;
 
-    public Task(int id, String name, String description, Date dateOfStart, Date dateOfEnd){
-        this.id = id;
+    public Task(String name, String description, Date dateOfStart, Date dateOfEnd){
         this.name = name;
         this.description = description;
         this.dateOfStart = dateOfStart;
